@@ -1,11 +1,17 @@
-variable location {}
+variable "location" {}
 
-variable db_names {
+variable "db_names" {
   type = "list"
 }
 
-variable "fw_rule_prefix" {}
+variable "firewall_rule_count" {
+  default = "0"
+}
 
-variable fw_rules {
+variable "firewall_rule_prefix" {
+  default = "firewall-"
+}
+
+variable "firewall_rules" {
   type = "list"
 }

@@ -37,13 +37,15 @@ module "postgresql" {
     db_charset = "UTF8"
     db_collation = "English_United States.1252"
 
+    firewall_rule_count = "1"
     firewall_rule_prefix = "firewall-"
     firewall_rules = [
         {name="test1", start_ip="10.0.0.5", end_ip="10.0.0.8"},
         {start_ip="127.0.0.0", end_ip="127.0.1.0"},
     ]
 
-    vnet_rule_name_prefix = "postgresql-vnet-rule-"
+    vnet_rule_count = "1"
+    vnet_rule_prefix = "postgresql-vnet-rule-"
     vnet_rules = [
         {name="subnet1", subnet_id="<subnet_id>"}
     ]
