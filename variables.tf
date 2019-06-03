@@ -78,6 +78,11 @@ variable "db_collation" {
   default     = "English_United States.1252"
 }
 
+variable "firewall_rule_count" {
+  description = "The number of firewall rules to be created."
+  default     = "0"
+}
+
 variable "firewall_rule_prefix" {
   description = "Specifies prefix for firewall rule names."
   default     = "firewall-"
@@ -88,13 +93,18 @@ variable "firewall_rules" {
   default     = []
 }
 
-variable "vnet_rule_name_prefix" {
+variable "vnet_rule_count" {
+  description = "The number of vnet rules to be created."
+  default     = "0"
+}
+
+variable "vnet_rule_prefix" {
   description = "Specifies prefix for vnet rule names."
   default     = "postgresql-vnet-rule-"
 }
 
 variable "vnet_rules" {
-  description = "The list of maps, describing vnet rules. Valud map items: name, subnet_id."
+  description = "The list of maps, describing vnet rules. Valid map items: name, subnet_id."
   default     = []
 }
 

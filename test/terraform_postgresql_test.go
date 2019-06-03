@@ -51,6 +51,7 @@ func TestTerraformPostgresql(t *testing.T) {
 	t.Parallel()
 
 	var dbNames = []string{"testdb1", "testdb2"}
+	var fwRuleCount = "1"
 	var fwRulePrefix = "testprefix-"
 	var fwRules = []map[string]string{{"name": "rule1", "start_ip": "0.0.0.0", "end_ip": "255.255.255.255"}}
 	terraformOptions := &terraform.Options{
@@ -59,10 +60,11 @@ func TestTerraformPostgresql(t *testing.T) {
 
 		// Variables to pass to our Terraform code using -var options
 		Vars: map[string]interface{}{
-			"location": "west us 2",
-			"db_names": dbNames,
-			"fw_rule_prefix": fwRulePrefix,
-			"fw_rules": fwRules,
+			"location":             "west us 2",
+			"db_names":             dbNames,
+			"firewall_rule_count":  fwRuleCount,
+			"firewall_rule_prefix": fwRulePrefix,
+			"firewall_rules":       fwRules,
 		},
 	}
 
@@ -78,24 +80,24 @@ func TestTerraformPostgresql(t *testing.T) {
 	var userTemp = terraform.Output(t, terraformOptions, "administrator_login")
 	dbConfig.user = fmt.Sprintf("%s@%s", userTemp, dbConfig.server)
 	dbConfig.password = terraform.Output(t, terraformOptions, "administrator_password")
-	
+
 	// Verify all databases were created
 	for _, dbName := range dbNames {
 		VerifyDB(t, dbConfig, dbName)
 	}
 
 	// Verify all firewall rules were created
-	firewall_rule_ids := terraform.Output(t, terraformOptions, "firewall_rule_ids") 
+	firewallRuleIds := terraform.Output(t, terraformOptions, "firewall_rule_ids")
 	for _, rule := range fwRules {
 		name := fwRulePrefix + rule["name"]
-		if strings.Index(firewall_rule_ids, name) == -1 {
+		if strings.Index(firewallRuleIds, name) == -1 {
 			t.Fatal("Error: wrong firewall rule id found")
 		}
 	}
 
 	// Verify vnet rules list is empty
-	vnet_rule_ids := terraform.Output(t, terraformOptions, "vnet_rule_ids") 
-	if len (vnet_rule_ids) > 0 {
+	vnetRuleIds := terraform.Output(t, terraformOptions, "vnet_rule_ids")
+	if len(vnetRuleIds) > 0 {
 		t.Fatal("Error: vnet_rule_ids is not empty!")
 	}
 }

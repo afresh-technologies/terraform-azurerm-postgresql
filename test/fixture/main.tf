@@ -37,6 +37,7 @@ module "postgresql" {
   db_charset   = "UTF8"
   db_collation = "English_United States.1252"
 
-  firewall_rule_prefix = "${var.fw_rule_prefix}"
-  firewall_rules       = "${var.fw_rules}"
+  firewall_rule_count  = "${var.firewall_rule_count}"
+  firewall_rule_prefix = "${var.firewall_rule_prefix}"
+  firewall_rules       = "${var.firewall_rules}"
 }

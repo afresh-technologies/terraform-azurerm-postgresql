@@ -1,6 +1,9 @@
-provider "azurerm" {
-  version = ">=1.16.0"
-}
+# provider "azurerm" {
+#   subscription_id = "REPLACE-WITH-YOUR-SUBSCRIPTION-ID"
+#   client_id       = "REPLACE-WITH-YOUR-CLIENT-ID"
+#   client_secret   = "REPLACE-WITH-YOUR-CLIENT-SECRET"
+#   tenant_id       = "REPLACE-WITH-YOUR-TENANT-ID"
+# }
 
 resource "azurerm_postgresql_server" "server" {
   name                = "${var.server_name}"
@@ -38,7 +41,7 @@ resource "azurerm_postgresql_database" "dbs" {
 }
 
 resource "azurerm_postgresql_firewall_rule" "firewall_rules" {
-  count               = "${length(var.firewall_rules)}"
+  count               = "${var.firewall_rule_count}"
   name                = "${var.firewall_rule_prefix}${lookup(var.firewall_rules[count.index], "name", count.index)}"
   resource_group_name = "${var.resource_group_name}"
   server_name         = "${azurerm_postgresql_server.server.name}"
@@ -47,8 +50,8 @@ resource "azurerm_postgresql_firewall_rule" "firewall_rules" {
 }
 
 resource "azurerm_postgresql_virtual_network_rule" "vnet_rules" {
-  count               = "${length(var.vnet_rules)}"
-  name                = "${var.vnet_rule_name_prefix}${lookup(var.vnet_rules[count.index], "name", count.index)}"
+  count               = "${var.vnet_rule_count}"
+  name                = "${var.vnet_rule_prefix}${lookup(var.vnet_rules[count.index], "name", count.index)}"
   resource_group_name = "${var.resource_group_name}"
   server_name         = "${azurerm_postgresql_server.server.name}"
   subnet_id           = "${lookup(var.vnet_rules[count.index], "subnet_id")}"
